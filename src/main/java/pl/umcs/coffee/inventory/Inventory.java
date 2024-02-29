@@ -1,4 +1,4 @@
-package pl.umcs.coffee.warehouse;
+package pl.umcs.coffee.inventory;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import pl.umcs.coffee.product.Product;
 @Setter
 @Entity
 @Table
-public class Warehouse {
+public class Inventory {
     @Id
     @GeneratedValue
     private Long id;

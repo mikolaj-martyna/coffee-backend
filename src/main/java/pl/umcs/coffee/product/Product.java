@@ -1,11 +1,12 @@
 package pl.umcs.coffee.product;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pl.umcs.coffee.order.Order;
+import pl.umcs.coffee.inventory.Inventory;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,4 +24,10 @@ public class Product {
     private long price;
 
     private String imagePath;
+
+    @OneToOne
+    private Inventory inventory;
+
+    @ManyToMany
+    private List<Order> orders;
 }
