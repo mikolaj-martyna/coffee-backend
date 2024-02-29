@@ -21,7 +21,6 @@ public class Product {
     private String description;
 
     private long price;
-    private long amountLeft;
 
     private String imagePath;
 }
