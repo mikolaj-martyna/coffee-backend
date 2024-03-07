@@ -1,5 +1,6 @@
 package pl.umcs.coffee.product;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -14,8 +15,9 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
+    // TODO: reformat this to take name instead of id, which is more than likely to not yet be defined by this point
     @Override
-    public Product addProduct(Product product) {
+    public Product addProduct(@NotNull Product product) {
         Product foundProduct = productRepository.findById(product.getId()).orElse(null);
 
         if (foundProduct != null) {

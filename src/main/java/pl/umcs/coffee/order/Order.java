@@ -16,19 +16,11 @@ public class Order {
     @Id
     @GeneratedValue
     private Long id;
-    private Status status;
+    private Status status = Status.AWAITING_PAYMENT;
 
     @ManyToOne
     private User user;
 
     @ManyToMany
     private List<Product> products;
-
-    private enum Status {
-        AWAITING_PAYMENT,
-        PAID,
-        PREPARATION,
-        SHIPPING,
-        DELIVERED
-    }
 }
