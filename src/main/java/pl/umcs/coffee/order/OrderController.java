@@ -14,32 +14,32 @@ public class OrderController {
     }
 
     @PostMapping("create")
-    public Order createOrder(@RequestBody Order order) {
+    public OrderDTO createOrder(@RequestBody OrderDTO order) {
         return orderService.createOrder(order);
     }
 
     @GetMapping("get/{orderId}")
-    public Order getOrder(@PathVariable Long orderId) {
+    public OrderDTO getOrder(@PathVariable Long orderId) {
         return orderService.getOrder(orderId);
     }
 
     @GetMapping("get/user/{userId}")
-    public List<Order> getAllOrdersForUser(@PathVariable Long userId) {
+    public List<OrderDTO> getAllOrdersForUser(@PathVariable Long userId) {
         return orderService.getAllOrdersForUser(userId);
     }
 
     @GetMapping("get/all")
-    public List<Order> getAllOrders() {
+    public List<OrderDTO> getAllOrders() {
         return orderService.getAllOrders();
     }
 
     @PutMapping("update")
-    public Order updateOrder(@RequestBody Order order) {
+    public OrderDTO updateOrder(@RequestBody OrderDTO order) {
         return orderService.updateOrder(order);
     }
 
     @DeleteMapping("delete/{orderId}")
-    public Order deleteOrder(@PathVariable Long orderId) {
+    public OrderDTO deleteOrder(@PathVariable Long orderId) {
         return orderService.deleteOrder(orderId);
     }
 }
