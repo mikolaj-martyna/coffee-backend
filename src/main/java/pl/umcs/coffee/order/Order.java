@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Table(name = "orders")
@@ -24,6 +23,6 @@ public class Order {
     @ManyToOne
     private User user;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Product> products;
 }
