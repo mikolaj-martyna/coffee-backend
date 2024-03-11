@@ -15,10 +15,9 @@ public class ProductServiceImpl implements ProductService {
         this.productRepository = productRepository;
     }
 
-    // TODO: reformat this to take name instead of id, which is more than likely to not yet be defined by this point
     @Override
     public Product addProduct(@NotNull Product product) {
-        Product foundProduct = productRepository.findById(product.getId()).orElse(null);
+        Product foundProduct = productRepository.findByIdOrName(product.getId(), product.getName()).orElse(null);
 
         if (foundProduct != null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -38,7 +37,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public List<Product> getProductsByIds(List<Long> productIds) {
-        return productRepository.findAllById(productIds);
+        List<Product> foundProducts = productRepository.findAllById(productIds);
+
+        if (foundProducts.size() != productIds.size()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return foundProducts;
     }
 
     @Override
