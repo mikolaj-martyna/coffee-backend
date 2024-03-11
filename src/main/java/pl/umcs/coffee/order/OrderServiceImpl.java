@@ -90,9 +90,8 @@ public class OrderServiceImpl implements OrderService {
         if (foundOrder == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        // TODO: add update order functionality
 
-        return order;
+        return toDTO(orderRepository.save(toOrder(order)));
     }
 
     @Override
@@ -112,5 +111,16 @@ public class OrderServiceImpl implements OrderService {
         for (Product p : order.getProducts()) productIds.add(p.getId());
 
         return OrderDTO.builder().id(order.getId()).status(order.getStatus()).userId(order.getUser().getId()).productIds(productIds).build();
+    }
+
+    private Order toOrder(@NotNull OrderDTO orderDTO) {
+        Order order = Order.builder()
+                .id(orderDTO.getId())
+                .status(orderDTO.getStatus())
+                .user(userService.getUser(orderDTO.getUserId()))
+                .products(productService.getProductsByIds(orderDTO.getProductIds()))
+                .build();
+
+        return order;
     }
 }

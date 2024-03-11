@@ -38,6 +38,11 @@ public class OrderController {
         return orderService.updateOrder(order);
     }
 
+    @PutMapping("update/{orderId}/status")
+    public OrderDTO updateOrderStatus(@PathVariable Long orderId, @RequestBody Status status) {
+        return orderService.changeOrderStatus(orderId, status);
+    }
+
     @DeleteMapping("delete/{orderId}")
     public OrderDTO deleteOrder(@PathVariable Long orderId) {
         return orderService.deleteOrder(orderId);
