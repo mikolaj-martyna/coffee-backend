@@ -30,4 +30,6 @@ public class UserController {
     public User deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
+
+    // TODO: add login functionality
 }
