@@ -1,6 +1,7 @@
 package pl.umcs.coffee.security;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.umcs.coffee.user.User;
@@ -9,7 +10,6 @@ import pl.umcs.coffee.user.User;
 @RequestMapping("auth")
 public class AuthController {
     private final JwtService jwtService;
-
     private final AuthService authService;
 
     public AuthController(JwtService jwtService, AuthService authService) {
@@ -18,7 +18,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String login(AuthRequestDto authRequestDto) {
+    public String login(@RequestBody AuthRequestDto authRequestDto) {
         User authenticatedUser = authService.login(authRequestDto);
 
         return jwtService.generateToken(authenticatedUser);

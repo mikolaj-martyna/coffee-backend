@@ -4,13 +4,16 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.coffee.security.AuthService;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final AuthService authService;
 
-    UserServiceImpl(final UserRepository userRepository) {
+    UserServiceImpl(final UserRepository userRepository, AuthService authService) {
         this.userRepository = userRepository;
+        this.authService = authService;
     }
 
     @Override
@@ -20,6 +23,8 @@ public class UserServiceImpl implements UserService {
         if (foundUser != null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+
+        user.setHashedPassword(authService.encodePassword(user.getPassword()));
 
         return userRepository.save(user);
     }
