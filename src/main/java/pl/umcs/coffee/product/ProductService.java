@@ -6,12 +6,11 @@ import java.util.List;
 
 @Service
 public interface ProductService {
-    Product addProduct(Product product);
+    ProductDTO addProduct(ProductDTO productDTO);
 
-    Product getProductDetails(Long id);
-    Product getProductDetails(String name);
+    ProductDTO getProductDetails(Long id);
 
-    List<Product> getAllProducts();
+    List<ProductDTO> getAllProducts();
 
-    Product deleteProduct(Long id);
+    ProductDTO deleteProduct(Long id);
 }

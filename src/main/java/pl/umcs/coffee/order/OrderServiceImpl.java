@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.Product;
+import pl.umcs.coffee.product.ProductRepository;
 import pl.umcs.coffee.product.ProductServiceImpl;
 import pl.umcs.coffee.user.User;
 import pl.umcs.coffee.user.UserRepository;
@@ -21,12 +22,14 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
+    private final ProductRepository productRepository;
 
-    OrderServiceImpl(final UserServiceImpl userService, final ProductServiceImpl productService, final OrderRepository orderRepository, UserRepository userRepository) {
+    OrderServiceImpl(final UserServiceImpl userService, final ProductServiceImpl productService, final OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
         this.userService = userService;
         this.productService = productService;
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -34,10 +37,10 @@ public class OrderServiceImpl implements OrderService {
         Optional<User> user = userRepository.findById(orderDTO.getUserId());
 
         if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        List<Product> products = productService.getProductsByIds(orderDTO.getProductIds());
+        List<Product> products = productRepository.findAllById(orderDTO.getProductIds());
         Order createdOrder = orderRepository.save(OrderMapper.toOrder(orderDTO, user.get(), products));
 
         return OrderMapper.toOrderDTO(createdOrder);

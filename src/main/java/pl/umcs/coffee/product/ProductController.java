@@ -14,27 +14,22 @@ public class ProductController {
     }
 
     @PostMapping("add")
-    public Product addProduct(Product product) {
-        return productService.addProduct(product);
+    public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
+        return productService.addProduct(productDTO);
     }
 
     @GetMapping("get/{id}")
-    public Product getProductDetails(@PathVariable Long id) {
+    public ProductDTO getProductDetails(@PathVariable Long id) {
         return productService.getProductDetails(id);
     }
 
-    @GetMapping("get/{name}")
-    public Product getProductDetails(@PathVariable String name) {
-        return productService.getProductDetails(name);
-    }
-
     @GetMapping("get/all")
-    public List<Product> getAllProducts() {
+    public List<ProductDTO> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @DeleteMapping("delete/{id}")
-    public Product deleteProduct(@PathVariable Long id) {
+    public ProductDTO deleteProduct(@PathVariable Long id) {
         return productService.deleteProduct(id);
     }
 }
