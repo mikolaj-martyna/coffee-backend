@@ -18,9 +18,9 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public String login(@RequestBody AuthRequestDto authRequestDto) {
+    public AuthResponseDto login(@RequestBody AuthRequestDto authRequestDto) {
         User authenticatedUser = authService.login(authRequestDto);
 
-        return jwtService.generateToken(authenticatedUser);
+        return new AuthResponseDto(jwtService.generateToken(authenticatedUser));
     }
 }

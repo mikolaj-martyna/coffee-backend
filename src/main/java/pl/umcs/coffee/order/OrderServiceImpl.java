@@ -28,7 +28,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO createOrder(@NotNull OrderDTO order) {
         Order createdOrder = orderRepository.save(Order.builder()
                 .status(Status.AWAITING_PAYMENT)
-                .user(userService.getUser(order.getUserId()))
+                .user(userService.getUserById(order.getUserId()))
                 .products(productService.getProductsByIds(order.getProductIds()))
                 .build());
 
@@ -117,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = Order.builder()
                 .id(orderDTO.getId())
                 .status(orderDTO.getStatus())
-                .user(userService.getUser(orderDTO.getUserId()))
+                .user(userService.getUserById(orderDTO.getUserId()))
                 .products(productService.getProductsByIds(orderDTO.getProductIds()))
                 .build();
 

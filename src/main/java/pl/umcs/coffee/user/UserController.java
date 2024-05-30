@@ -16,9 +16,14 @@ public class UserController {
         return userService.createUser(user);
     }
 
+    @GetMapping("get")
+    public User getUser(@RequestHeader (name="Authorization") String token) {
+        return userService.getUser(token.split(" ")[1]);
+    }
+
     @GetMapping("get/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    public User getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
     @PutMapping("edit")

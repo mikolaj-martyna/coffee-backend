@@ -5,15 +5,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.security.AuthService;
+import pl.umcs.coffee.security.JwtService;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final AuthService authService;
+    private final JwtService jwtService;
 
-    UserServiceImpl(final UserRepository userRepository, AuthService authService) {
+    UserServiceImpl(final UserRepository userRepository, AuthService authService, JwtService jwtService) {
         this.userRepository = userRepository;
         this.authService = authService;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -30,7 +33,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(Long id) {
+    public User getUser(String token) {
+        User foundUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+
+        if (foundUser == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return foundUser;
+    }
+
+    @Override
+    public User getUserById(Long id) {
         User foundUser = userRepository.findById(id).orElse(null);
 
         if (foundUser == null) {
