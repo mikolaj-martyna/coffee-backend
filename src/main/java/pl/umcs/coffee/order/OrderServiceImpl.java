@@ -6,10 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.product.ProductServiceImpl;
+import pl.umcs.coffee.user.User;
+import pl.umcs.coffee.user.UserRepository;
 import pl.umcs.coffee.user.UserServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -17,22 +20,27 @@ public class OrderServiceImpl implements OrderService {
     private final ProductServiceImpl productService;
 
     private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
 
-    OrderServiceImpl(final UserServiceImpl userService, final ProductServiceImpl productService, final OrderRepository orderRepository) {
+    OrderServiceImpl(final UserServiceImpl userService, final ProductServiceImpl productService, final OrderRepository orderRepository, UserRepository userRepository) {
         this.userService = userService;
         this.productService = productService;
         this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
-    public OrderDTO createOrder(@NotNull OrderDTO order) {
-        Order createdOrder = orderRepository.save(Order.builder()
-                .status(Status.AWAITING_PAYMENT)
-                .user(userService.getUserById(order.getUserId()))
-                .products(productService.getProductsByIds(order.getProductIds()))
-                .build());
+    public OrderDTO createOrder(@NotNull OrderDTO orderDTO) {
+        Optional<User> user = userRepository.findById(orderDTO.getUserId());
 
-        return toDTO(createdOrder);
+        if (user.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+
+        List<Product> products = productService.getProductsByIds(orderDTO.getProductIds());
+        Order createdOrder = orderRepository.save(OrderMapper.toOrder(orderDTO, user.get(), products));
+
+        return OrderMapper.toOrderDTO(createdOrder);
     }
 
     @Override
@@ -43,7 +51,7 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return toDTO(foundOrder);
+        return OrderMapper.toOrderDTO(foundOrder);
     }
 
     @Override
@@ -52,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> userOrdersDTO = new ArrayList<>();
 
         for (Order order : userOrders) {
-            userOrdersDTO.add(toDTO(order));
+            userOrdersDTO.add(OrderMapper.toOrderDTO(order));
         }
 
         return userOrdersDTO;
@@ -64,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDTO> allOrdersDTO = new ArrayList<>();
 
         for (Order order : allOrders) {
-            allOrdersDTO.add(toDTO(order));
+            allOrdersDTO.add(OrderMapper.toOrderDTO(order));
         }
 
         return allOrdersDTO;
@@ -78,20 +86,19 @@ public class OrderServiceImpl implements OrderService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         foundOrder.setStatus(status);
-        Order changedOrder = orderRepository.save(foundOrder);
 
-        return toDTO(changedOrder);
+        return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));
     }
 
     @Override
-    public OrderDTO updateOrder(@NotNull OrderDTO order) {
-        Order foundOrder = orderRepository.findById(order.getId()).orElse(null);
+    public OrderDTO updateOrder(@NotNull OrderDTO orderDTO) {
+        Order foundOrder = orderRepository.findById(orderDTO.getId()).orElse(null);
 
         if (foundOrder == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
-        return toDTO(orderRepository.save(toOrder(order)));
+        return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));
     }
 
     @Override
@@ -103,24 +110,6 @@ public class OrderServiceImpl implements OrderService {
         }
         orderRepository.delete(foundOrder);
 
-        return toDTO(foundOrder);
-    }
-
-    private OrderDTO toDTO(@NotNull Order order) {
-        List<Long> productIds = new ArrayList<>();
-        for (Product p : order.getProducts()) productIds.add(p.getId());
-
-        return OrderDTO.builder().id(order.getId()).status(order.getStatus()).userId(order.getUser().getId()).productIds(productIds).build();
-    }
-
-    private Order toOrder(@NotNull OrderDTO orderDTO) {
-        Order order = Order.builder()
-                .id(orderDTO.getId())
-                .status(orderDTO.getStatus())
-                .user(userService.getUserById(orderDTO.getUserId()))
-                .products(productService.getProductsByIds(orderDTO.getProductIds()))
-                .build();
-
-        return order;
+        return OrderMapper.toOrderDTO(foundOrder);
     }
 }

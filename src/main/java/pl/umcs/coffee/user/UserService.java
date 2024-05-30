@@ -1,13 +1,13 @@
 package pl.umcs.coffee.user;
 
 public interface UserService {
-    User createUser(User user);
+    UserDTO createUser(UserCreationDTO user);
 
-    User getUser(String token);
+    UserDTO getUser(String token);
 
-    User getUserById(Long id);
+    UserDTO getUserById(Long id);
 
-    User updateUser(User user);
+    UserDTO updateUser(UserDTO user);
 
-    User deleteUser(Long id);
+    UserDTO deleteUser(Long id);
 }

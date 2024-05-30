@@ -9,71 +9,73 @@ import pl.umcs.coffee.security.JwtService;
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final UserRepository userRepository;
-    private final AuthService authService;
-    private final JwtService jwtService;
+  private final UserRepository userRepository;
+  private final AuthService authService;
+  private final JwtService jwtService;
 
-    UserServiceImpl(final UserRepository userRepository, AuthService authService, JwtService jwtService) {
-        this.userRepository = userRepository;
-        this.authService = authService;
-        this.jwtService = jwtService;
+  UserServiceImpl(
+      final UserRepository userRepository, AuthService authService, JwtService jwtService) {
+    this.userRepository = userRepository;
+    this.authService = authService;
+    this.jwtService = jwtService;
+  }
+
+  @Override
+  public UserDTO createUser(@NotNull UserCreationDTO userDTO) {
+    User foundUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
+
+    if (foundUser != null) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @Override
-    public User createUser(@NotNull User user) {
-        User foundUser = userRepository.findByEmail(user.getEmail()).orElse(null);
+    userDTO.setPassword(authService.encodePassword(userDTO.getPassword()));
 
-        if (foundUser != null) {
-            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
+    return UserMapper.toUserDTO(userRepository.save(UserMapper.toUser(userDTO)));
+  }
 
-        user.setHashedPassword(authService.encodePassword(user.getPassword()));
+  @Override
+  public UserDTO getUser(String token) {
+    User foundUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
 
-        return userRepository.save(user);
+    if (foundUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public User getUser(String token) {
-        User foundUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+    return UserMapper.toUserDTO(foundUser);
+  }
 
-        if (foundUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+  @Override
+  public UserDTO getUserById(Long id) {
+    User foundUser = userRepository.findById(id).orElse(null);
 
-        return foundUser;
+    if (foundUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public User getUserById(Long id) {
-        User foundUser = userRepository.findById(id).orElse(null);
+    return UserMapper.toUserDTO(foundUser);
+  }
 
-        if (foundUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+  // TODO: implement update user functionality
+  @Override
+  public UserDTO updateUser(@NotNull UserDTO userDTO) {
+    User foundUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
 
-        return foundUser;
+    if (foundUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public User updateUser(@NotNull User user) {
-        User foundUser = userRepository.findById(user.getId()).orElse(null);
+    return UserMapper.toUserDTO(userRepository.save(foundUser));
+  }
 
-        if (foundUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+  @Override
+  public UserDTO deleteUser(Long id) {
+    User deletedUser = userRepository.findById(id).orElse(null);
 
-        return userRepository.save(user);
+    if (deletedUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+    userRepository.deleteById(id);
 
-    @Override
-    public User deleteUser(Long id) {
-        User deletedUser = userRepository.findById(id).orElse(null);
-
-        if (deletedUser == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        userRepository.deleteById(id);
-
-        return deletedUser;
-    }
+    return UserMapper.toUserDTO(deletedUser);
+  }
 }

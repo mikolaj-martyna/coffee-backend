@@ -12,27 +12,27 @@ public class UserController {
     }
 
     @PostMapping("create")
-    public User createUser(@RequestBody User user) {
-        return userService.createUser(user);
+    public UserDTO createUser(@RequestBody UserCreationDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 
     @GetMapping("get")
-    public User getUser(@RequestHeader (name="Authorization") String token) {
+    public UserDTO getUser(@RequestHeader (name="Authorization") String token) {
         return userService.getUser(token.split(" ")[1]);
     }
 
     @GetMapping("get/{id}")
-    public User getUserById(@PathVariable Long id) {
+    public UserDTO getUserById(@PathVariable Long id) {
         return userService.getUserById(id);
     }
 
     @PutMapping("edit")
-    public User updateUser(@RequestBody User user) {
-        return userService.updateUser(user);
+    public UserDTO updateUser(@RequestBody UserDTO userDTO) {
+        return userService.updateUser(userDTO);
     }
 
     @DeleteMapping("delete/{id}")
-    public User deleteUser(@PathVariable Long id) {
+    public UserDTO deleteUser(@PathVariable Long id) {
         return userService.deleteUser(id);
     }
 }
