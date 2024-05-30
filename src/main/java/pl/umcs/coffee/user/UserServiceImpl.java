@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(@NotNull User user) {
-        User foundUser = userRepository.findById(user.getId()).orElse(null);
+        User foundUser = userRepository.findByEmail(user.getEmail()).orElse(null);
 
         if (foundUser != null) {
             throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY);
