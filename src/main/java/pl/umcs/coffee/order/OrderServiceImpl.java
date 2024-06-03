@@ -8,110 +8,96 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.Product;
-import pl.umcs.coffee.product.ProductRepository;
-import pl.umcs.coffee.product.ProductServiceImpl;
+import pl.umcs.coffee.security.JwtService;
 import pl.umcs.coffee.user.User;
 import pl.umcs.coffee.user.UserRepository;
-import pl.umcs.coffee.user.UserServiceImpl;
 
 @Service
 public class OrderServiceImpl implements OrderService {
-    private final UserServiceImpl userService;
-    private final ProductServiceImpl productService;
+  private final OrderRepository orderRepository;
+  private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
-    private final ProductRepository productRepository;
+  OrderServiceImpl(
+      final OrderRepository orderRepository,
+      UserRepository userRepository,
+      JwtService jwtService) {
+    this.orderRepository = orderRepository;
+    this.userRepository = userRepository;
+      this.jwtService = jwtService;
+  }
 
-    OrderServiceImpl(final UserServiceImpl userService, final ProductServiceImpl productService, final OrderRepository orderRepository, UserRepository userRepository, ProductRepository productRepository) {
-        this.userService = userService;
-        this.productService = productService;
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-        this.productRepository = productRepository;
+  @Override
+  public OrderDTO createOrder(String token) {
+    Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
+
+    if (user.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public OrderDTO createOrder(@NotNull OrderDTO orderDTO) {
-        Optional<User> user = userRepository.findById(orderDTO.getUserId());
+    List<Product> products = user.get().getCart().getProducts();
+    Order createdOrder =
+        orderRepository.save(new Order(0, Status.AWAITING_PAYMENT, user.get(), products));
 
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    return OrderMapper.toOrderDTO(createdOrder);
+  }
 
-        List<Product> products = productRepository.findAllById(orderDTO.getProductIds());
-        Order createdOrder = orderRepository.save(OrderMapper.toOrder(orderDTO, user.get(), products));
+  @Override
+  public OrderDTO getOrder(Long orderId) {
+    Order foundOrder = orderRepository.findById(orderId).orElse(null);
 
-        return OrderMapper.toOrderDTO(createdOrder);
+    if (foundOrder == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    @Override
-    public OrderDTO getOrder(Long orderId) {
-        Order foundOrder = orderRepository.findById(orderId).orElse(null);
+    return OrderMapper.toOrderDTO(foundOrder);
+  }
 
-        if (foundOrder == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+  @Override
+  public List<OrderDTO> getAllOrdersForUser(String token) {
+    List<Order> userOrders = orderRepository.findAllByUserEmail(jwtService.extractUsername(token));
+    List<OrderDTO> userOrdersDTO = new ArrayList<>();
 
-        return OrderMapper.toOrderDTO(foundOrder);
+    for (Order order : userOrders) {
+      userOrdersDTO.add(OrderMapper.toOrderDTO(order));
     }
 
-    @Override
-    public List<OrderDTO> getAllOrdersForUser(Long userId) {
-        List<Order> userOrders = orderRepository.findAllByUserId(userId);
-        List<OrderDTO> userOrdersDTO = new ArrayList<>();
+    return userOrdersDTO;
+  }
 
-        for (Order order : userOrders) {
-            userOrdersDTO.add(OrderMapper.toOrderDTO(order));
-        }
+  @Override
+  public List<OrderDTO> getAllOrders() {
+    List<Order> allOrders = orderRepository.findAll();
+    List<OrderDTO> allOrdersDTO = new ArrayList<>();
 
-        return userOrdersDTO;
+    for (Order order : allOrders) {
+      allOrdersDTO.add(OrderMapper.toOrderDTO(order));
     }
 
-    @Override
-    public List<OrderDTO> getAllOrders() {
-        List<Order> allOrders = orderRepository.findAll();
-        List<OrderDTO> allOrdersDTO = new ArrayList<>();
+    return allOrdersDTO;
+  }
 
-        for (Order order : allOrders) {
-            allOrdersDTO.add(OrderMapper.toOrderDTO(order));
-        }
+  @Override
+  public OrderDTO updateOrder(@NotNull OrderDTO orderDTO) {
+    Order foundOrder = orderRepository.findById(orderDTO.getId()).orElse(null);
 
-        return allOrdersDTO;
+    if (foundOrder == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+    foundOrder.setStatus(orderDTO.getStatus());
 
-    @Override
-    public OrderDTO changeOrderStatus(Long orderId, Status status) {
-        Order foundOrder = orderRepository.findById(orderId).orElse(null);
+    return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));
+  }
 
-        if (foundOrder == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        foundOrder.setStatus(status);
+  @Override
+  public OrderDTO deleteOrder(Long orderId) {
+    Order foundOrder = orderRepository.findById(orderId).orElse(null);
 
-        return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));
+    if (foundOrder == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+    orderRepository.delete(foundOrder);
 
-    @Override
-    public OrderDTO updateOrder(@NotNull OrderDTO orderDTO) {
-        Order foundOrder = orderRepository.findById(orderDTO.getId()).orElse(null);
-
-        if (foundOrder == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));
-    }
-
-    @Override
-    public OrderDTO deleteOrder(Long orderId) {
-        Order foundOrder = orderRepository.findById(orderId).orElse(null);
-
-        if (foundOrder == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-        orderRepository.delete(foundOrder);
-
-        return OrderMapper.toOrderDTO(foundOrder);
-    }
+    return OrderMapper.toOrderDTO(foundOrder);
+  }
 }

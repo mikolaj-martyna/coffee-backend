@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.umcs.coffee.cart.Cart;
+import pl.umcs.coffee.order.Order;
 
 @Setter
 @Getter
@@ -40,6 +41,10 @@ public class User implements UserDetails {
 
   // Cart
   @OneToOne private Cart cart;
+
+  // Order
+  @OneToMany
+  private List<Order> orders = new ArrayList<>();
 
   // UserDetails implementation
   @Override

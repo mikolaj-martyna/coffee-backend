@@ -13,18 +13,18 @@ public class OrderController {
     }
 
     @PostMapping("create")
-    public OrderDTO createOrder(@RequestBody OrderDTO order) {
-        return orderService.createOrder(order);
+    public OrderDTO createOrder(@RequestHeader(name = "Authorization") String token) {
+        return orderService.createOrder(token.split(" ")[1]);
     }
 
-    @GetMapping("get/{orderId}")
-    public OrderDTO getOrder(@PathVariable Long orderId) {
-        return orderService.getOrder(orderId);
+    @GetMapping("get/{id}")
+    public OrderDTO getOrder(@PathVariable Long id) {
+        return orderService.getOrder(id);
     }
 
-    @GetMapping("get/user/{userId}")
-    public List<OrderDTO> getAllOrdersForUser(@PathVariable Long userId) {
-        return orderService.getAllOrdersForUser(userId);
+    @GetMapping("get/user")
+    public List<OrderDTO> getAllOrdersForUser(@RequestHeader(name = "Authorization") String token) {
+        return orderService.getAllOrdersForUser(token.split(" ")[1]);
     }
 
     @GetMapping("get/all")
@@ -35,11 +35,6 @@ public class OrderController {
     @PutMapping("update")
     public OrderDTO updateOrder(@RequestBody OrderDTO order) {
         return orderService.updateOrder(order);
-    }
-
-    @PutMapping("update/{orderId}/status")
-    public OrderDTO updateOrderStatus(@PathVariable Long orderId, @RequestBody Status status) {
-        return orderService.changeOrderStatus(orderId, status);
     }
 
     @DeleteMapping("delete/{orderId}")

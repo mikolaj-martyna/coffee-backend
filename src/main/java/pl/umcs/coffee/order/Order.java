@@ -16,7 +16,7 @@ import pl.umcs.coffee.user.User;
 public class Order {
     @Id
     @GeneratedValue
-    private Long id;
+    private long id;
     private Status status;
 
     @ManyToOne

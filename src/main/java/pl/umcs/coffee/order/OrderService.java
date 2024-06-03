@@ -3,15 +3,13 @@ package pl.umcs.coffee.order;
 import java.util.List;
 
 public interface OrderService {
-  OrderDTO createOrder(OrderDTO order);
+  OrderDTO createOrder(String token);
 
   OrderDTO getOrder(Long orderId);
 
-  List<OrderDTO> getAllOrdersForUser(Long userId);
+  List<OrderDTO> getAllOrdersForUser(String token);
 
   List<OrderDTO> getAllOrders();
-
-  OrderDTO changeOrderStatus(Long orderId, Status status);
 
   OrderDTO updateOrder(OrderDTO order);
 
