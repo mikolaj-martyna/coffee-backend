@@ -1,6 +1,7 @@
 package pl.umcs.coffee.user;
 
 import org.jetbrains.annotations.NotNull;
+import pl.umcs.coffee.cart.Cart;
 
 public class UserMapper {
   public static UserDTO toUserDTO(@NotNull User user) {
@@ -19,32 +20,17 @@ public class UserMapper {
 
   public static User toUser(@NotNull UserCreationDTO userDTO) {
     return User.builder()
-            .name(userDTO.getName())
-            .surname(userDTO.getSurname())
-            .email(userDTO.getEmail())
-            .hashedPassword(userDTO.getPassword())
-            .country(userDTO.getCountry())
-            .city(userDTO.getCity())
-            .street(userDTO.getStreet())
-            .zipCode(userDTO.getZipCode())
-            .buildingNumber(userDTO.getBuildingNumber())
-            .apartmentNumber(userDTO.getApartmentNumber())
-            .role(Role.USER)
-            .build();
-  }
-
-  public static User toUser(@NotNull UserDTO userDTO) {
-    return User.builder()
-            .name(userDTO.getName())
-            .surname(userDTO.getSurname())
-            .email(userDTO.getEmail())
-            .country(userDTO.getCountry())
-            .city(userDTO.getCity())
-            .street(userDTO.getStreet())
-            .zipCode(userDTO.getZipCode())
-            .buildingNumber(userDTO.getBuildingNumber())
-            .apartmentNumber(userDTO.getApartmentNumber())
-            .role(Role.USER)
-            .build();
+        .name(userDTO.getName())
+        .surname(userDTO.getSurname())
+        .email(userDTO.getEmail())
+        .hashedPassword(userDTO.getPassword())
+        .country(userDTO.getCountry())
+        .city(userDTO.getCity())
+        .street(userDTO.getStreet())
+        .zipCode(userDTO.getZipCode())
+        .buildingNumber(userDTO.getBuildingNumber())
+        .apartmentNumber(userDTO.getApartmentNumber())
+        .role(Role.USER)
+        .build();
   }
 }

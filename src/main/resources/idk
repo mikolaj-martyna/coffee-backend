@@ -1,0 +1,9 @@
+INSERT INTO products (id, name, category, description, price, image_path) VALUES (1, 'Dacia Logan', 'Car', 'The best Nurburgring 24h rally car', 149900, 'https://s1.cdn.autoevolution.com/images/news/meet-the-fan-favorite-wacky-racer-that-finished-the-nurburgring-24-hour-race-162764_1.jpg');
+INSERT INTO products (id, name, category, description, price, image_path) VALUES (2, 'Florian', 'Plant', 'Potted succulent plant. Just a little boy.', 1299, 'https://vivioflowers.ca/wp-content/uploads/2021/02/succulent-45-scaled-1.jpg');
+INSERT INTO products (id, name, category, description, price, image_path) VALUES (3, 'Tracksuit', 'Clothing', 'Blue monogram tracksuit', 109900, 'https://i.ebayimg.com/images/g/qAwAAOSwY75kXBKe/s-l1200.webp');
+
+INSERT INTO users (id, name, surname, email, hashed_password, country, city, street, zip_code, building_number, apartment_number, role)
+VALUES (1, 'admin', 'admin', 'admin@example.com', '$2a$10$faZuU8ExEMnvHb/kEO0MJee4g6.dYuYPfksoUt7PhUgPAS9SZck9K', 'Malta', 'Valetta', 'abc', '1010', 17, 25, 1);
+
+INSERT INTO carts (id) VALUES (1);
+

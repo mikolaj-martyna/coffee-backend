@@ -1,5 +1,7 @@
 package pl.umcs.coffee.product;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 
 public class ProductMapper {
@@ -14,14 +16,18 @@ public class ProductMapper {
         .build();
   }
 
+  public static List<ProductDTO> toProductDTOs(@NotNull List<Product> products) {
+    return products.stream().map(ProductMapper::toProductDTO).collect(Collectors.toList());
+  }
+
   public static Product toProduct(@NotNull ProductDTO productDTO) {
     return Product.builder()
-            .id(productDTO.getId())
-            .name(productDTO.getName())
-            .category(productDTO.getCategory())
-            .description(productDTO.getDescription())
-            .price(productDTO.getPrice())
-            .imagePath(productDTO.getImagePath())
-            .build();
+        .id(productDTO.getId())
+        .name(productDTO.getName())
+        .category(productDTO.getCategory())
+        .description(productDTO.getDescription())
+        .price(productDTO.getPrice())
+        .imagePath(productDTO.getImagePath())
+        .build();
   }
 }

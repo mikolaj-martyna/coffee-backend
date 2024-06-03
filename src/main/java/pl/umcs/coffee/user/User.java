@@ -1,10 +1,12 @@
 package pl.umcs.coffee.user;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.umcs.coffee.cart.Cart;
 
 import java.util.*;
 
@@ -37,8 +39,14 @@ public class User implements UserDetails {
     private int buildingNumber;
     private int apartmentNumber;
 
+    // Permissions
     private Role role = Role.USER;
 
+    // Cart
+    @OneToOne(cascade = CascadeType.ALL)
+    private Cart cart;
+
+    // UserDetails implementation
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority(role.toString()));

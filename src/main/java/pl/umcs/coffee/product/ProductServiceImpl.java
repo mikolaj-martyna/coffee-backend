@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     return ProductMapper.toProductDTO(productRepository.save(ProductMapper.toProduct(productDTO)));
+  }
+
+  @Override
+  public List<ProductDTO> addProducts(@NotNull List<ProductDTO> productDTOs) {
+    List<ProductDTO> addedProductDTOs = new ArrayList<>();
+
+    for (ProductDTO productDTO : productDTOs) {
+      addedProductDTOs.add(addProduct(productDTO));
+    }
+
+    return addedProductDTOs;
   }
 
   @Override

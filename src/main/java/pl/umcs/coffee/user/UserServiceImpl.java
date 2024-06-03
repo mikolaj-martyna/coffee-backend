@@ -30,7 +30,9 @@ public class UserServiceImpl implements UserService {
 
     userDTO.setPassword(authService.encodePassword(userDTO.getPassword()));
 
-    return UserMapper.toUserDTO(userRepository.save(UserMapper.toUser(userDTO)));
+    User user = userRepository.save(UserMapper.toUser(userDTO));
+
+    return UserMapper.toUserDTO(user);
   }
 
   @Override
