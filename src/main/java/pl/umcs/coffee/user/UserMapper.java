@@ -29,7 +29,9 @@ public class UserMapper {
             .zipCode(userDTO.getZipCode())
             .buildingNumber(userDTO.getBuildingNumber())
             .apartmentNumber(userDTO.getApartmentNumber())
-            .build();}
+            .role(Role.USER)
+            .build();
+  }
 
   public static User toUser(@NotNull UserDTO userDTO) {
     return User.builder()
@@ -42,6 +44,7 @@ public class UserMapper {
             .zipCode(userDTO.getZipCode())
             .buildingNumber(userDTO.getBuildingNumber())
             .apartmentNumber(userDTO.getApartmentNumber())
+            .role(Role.USER)
             .build();
   }
 }
