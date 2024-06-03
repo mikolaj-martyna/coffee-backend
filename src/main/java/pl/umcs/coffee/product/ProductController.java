@@ -13,12 +13,7 @@ public class ProductController {
     this.productService = productService;
   }
 
-  @PostMapping("add/one")
-  public ProductDTO addProduct(@RequestBody ProductDTO productDTO) {
-    return productService.addProduct(productDTO);
-  }
-
-  @PostMapping("add/multiple")
+  @PostMapping("add")
   public List<ProductDTO> addProducts(@RequestBody List<ProductDTO> productDTO) {
     return productService.addProducts(productDTO);
   }

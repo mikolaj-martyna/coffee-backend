@@ -29,6 +29,6 @@ public class Product {
     @ManyToMany(mappedBy = "products")
     private List<Cart> cart;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "products")
     private List<Order> orders;
 }
