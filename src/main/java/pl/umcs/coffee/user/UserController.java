@@ -11,11 +11,13 @@ public class UserController {
     this.userService = userService;
   }
 
+  // All
   @PostMapping("create")
   public UserDTO createUser(@RequestBody UserCreationDTO userDTO, @RequestParam(required = false, name = "admin", defaultValue = "false") boolean isAdmin) {
     return userService.createUser(userDTO, isAdmin);
   }
 
+  // User
   @GetMapping("get")
   public UserDTO getUser(@RequestHeader(name = "Authorization") String token) {
     return userService.getUser(token.split(" ")[1]);
@@ -31,6 +33,7 @@ public class UserController {
     return userService.deleteUser(token.split(" ")[1]);
   }
 
+  // Admin
   @GetMapping("get/{id}")
   public UserDTO getUserById(@PathVariable long id) {
     return userService.getUserById(id);
