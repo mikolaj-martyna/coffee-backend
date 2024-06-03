@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.ProductDTO;
 import pl.umcs.coffee.product.ProductMapper;
+import pl.umcs.coffee.product.ProductRepository;
 import pl.umcs.coffee.security.JwtService;
 import pl.umcs.coffee.user.User;
 import pl.umcs.coffee.user.UserRepository;
@@ -17,12 +18,14 @@ public class CartServiceImpl implements CartService {
   private final CartRepository cartRepository;
   private final UserRepository userRepository;
   private final JwtService jwtService;
+  private final ProductRepository productRepository;
 
   public CartServiceImpl(
-      CartRepository cartRepository, UserRepository userRepository, JwtService jwtService) {
+          CartRepository cartRepository, UserRepository userRepository, JwtService jwtService, ProductRepository productRepository) {
     this.cartRepository = cartRepository;
     this.userRepository = userRepository;
     this.jwtService = jwtService;
+    this.productRepository = productRepository;
   }
 
   public List<ProductDTO> updateCart(String token, List<ProductDTO> productDTOs, Action action) {
@@ -41,7 +44,7 @@ public class CartServiceImpl implements CartService {
     switch (action) {
       case ADD -> {
         for (ProductDTO productDTO : productDTOs)
-          cart.addProduct(ProductMapper.toProduct(productDTO));
+          cart.addProduct(productRepository.findByName(productDTO.getName()).orElseThrow());
       }
       case REMOVE -> {
         for (ProductDTO productDTO : productDTOs)
