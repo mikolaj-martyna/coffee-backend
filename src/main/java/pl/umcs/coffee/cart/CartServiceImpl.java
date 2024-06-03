@@ -3,6 +3,7 @@ package pl.umcs.coffee.cart;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.ProductDTO;
@@ -33,7 +34,8 @@ public class CartServiceImpl implements CartService {
     }
 
     // Get products from DTOs
-    // and add them to user's cart
+    // and add/remove them to/from user's cart
+    // or clear it completely
     Cart cart = user.get().getCart();
 
     switch (action) {
@@ -45,7 +47,7 @@ public class CartServiceImpl implements CartService {
         for (ProductDTO productDTO : productDTOs)
           cart.removeProduct(ProductMapper.toProduct(productDTO));
       }
-      case CLEAR -> cart.getProducts().clear();
+      case CLEAR -> cart.clear();
     }
 
     // Save changes

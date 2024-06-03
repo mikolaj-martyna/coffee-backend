@@ -39,8 +39,7 @@ public class User implements UserDetails {
   private Role role = Role.USER;
 
   // Cart
-  @OneToOne(cascade = CascadeType.ALL)
-  private Cart cart;
+  @OneToOne private Cart cart;
 
   // UserDetails implementation
   @Override

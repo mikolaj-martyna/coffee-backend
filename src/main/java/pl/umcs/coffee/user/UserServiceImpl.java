@@ -4,20 +4,26 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.coffee.cart.Cart;
+import pl.umcs.coffee.cart.CartRepository;
 import pl.umcs.coffee.security.AuthService;
 import pl.umcs.coffee.security.JwtService;
+
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
   private final UserRepository userRepository;
   private final AuthService authService;
   private final JwtService jwtService;
+  private final CartRepository cartRepository;
 
   UserServiceImpl(
-      final UserRepository userRepository, AuthService authService, JwtService jwtService) {
+          final UserRepository userRepository, AuthService authService, JwtService jwtService, CartRepository cartRepository) {
     this.userRepository = userRepository;
     this.authService = authService;
     this.jwtService = jwtService;
+    this.cartRepository = cartRepository;
   }
 
   @Override
@@ -31,6 +37,7 @@ public class UserServiceImpl implements UserService {
     userDTO.setPassword(authService.encodePassword(userDTO.getPassword()));
 
     User user = UserMapper.toUser(userDTO);
+    user.setCart(cartRepository.save(new Cart(0, user, new ArrayList<>())));
 
     if (isAdmin) {
       user.setRole(Role.ADMIN);

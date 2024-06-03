@@ -3,6 +3,7 @@ package pl.umcs.coffee.product;
 import jakarta.persistence.*;
 import java.util.List;
 import lombok.*;
+import pl.umcs.coffee.cart.Cart;
 import pl.umcs.coffee.order.Order;
 
 @Getter
@@ -24,6 +25,9 @@ public class Product {
     private long price;
 
     private String imagePath;
+
+    @ManyToMany(mappedBy = "products")
+    private List<Cart> cart;
 
     @ManyToMany
     private List<Order> orders;
