@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO createUser(@NotNull UserCreationDTO userDTO) {
+  public UserDTO createUser(@NotNull UserCreationDTO userDTO, boolean isAdmin) {
     User foundUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
 
     if (foundUser != null) {
@@ -30,9 +30,10 @@ public class UserServiceImpl implements UserService {
 
     userDTO.setPassword(authService.encodePassword(userDTO.getPassword()));
 
-    User user = userRepository.save(UserMapper.toUser(userDTO));
+    User user = UserMapper.toUser(userDTO);
+    user.setRole(Role.ADMIN);
 
-    return UserMapper.toUserDTO(user);
+    return UserMapper.toUserDTO(userRepository.save(user));
   }
 
   @Override

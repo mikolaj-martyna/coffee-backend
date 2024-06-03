@@ -12,8 +12,8 @@ public class UserController {
   }
 
   @PostMapping("create")
-  public UserDTO createUser(@RequestBody UserCreationDTO userDTO) {
-    return userService.createUser(userDTO);
+  public UserDTO createUser(@RequestBody UserCreationDTO userDTO, @RequestParam(required = false, name = "admin") boolean isAdmin) {
+    return userService.createUser(userDTO, isAdmin);
   }
 
   @GetMapping("get")
