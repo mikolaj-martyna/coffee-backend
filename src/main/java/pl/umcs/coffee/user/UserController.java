@@ -12,7 +12,7 @@ public class UserController {
   }
 
   @PostMapping("create")
-  public UserDTO createUser(@RequestBody UserCreationDTO userDTO, @RequestParam(required = false, name = "admin") boolean isAdmin) {
+  public UserDTO createUser(@RequestBody UserCreationDTO userDTO, @RequestParam(required = false, name = "admin", defaultValue = "false") boolean isAdmin) {
     return userService.createUser(userDTO, isAdmin);
   }
 
@@ -21,18 +21,28 @@ public class UserController {
     return userService.getUser(token.split(" ")[1]);
   }
 
+  @PutMapping("edit")
+  public UserDTO updateUser(@RequestHeader(name = "Authorization") String token, @RequestBody UserDTO userDTO) {
+    return userService.updateUser(token, userDTO);
+  }
+
+  @DeleteMapping("delete")
+  public UserDTO deleteUser(@RequestHeader(name = "Authorization") String token) {
+    return userService.deleteUser(token.split(" ")[1]);
+  }
+
   @GetMapping("get/{id}")
-  public UserDTO getUserById(@PathVariable Long id) {
+  public UserDTO getUserById(@PathVariable long id) {
     return userService.getUserById(id);
   }
 
-  @PutMapping("edit")
-  public UserDTO updateUser(@RequestBody UserDTO userDTO) {
-    return userService.updateUser(userDTO);
+  @PutMapping("edit/{id}")
+  public UserDTO updateUserById(@PathVariable long id, @RequestBody UserDTO userDTO) {
+    return userService.updateUserById(id, userDTO);
   }
 
   @DeleteMapping("delete/{id}")
-  public UserDTO deleteUser(@PathVariable Long id) {
-    return userService.deleteUser(id);
+  public UserDTO deleteUserById(@PathVariable long id) {
+    return userService.deleteUserById(id);
   }
 }

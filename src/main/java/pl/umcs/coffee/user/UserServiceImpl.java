@@ -31,7 +31,10 @@ public class UserServiceImpl implements UserService {
     userDTO.setPassword(authService.encodePassword(userDTO.getPassword()));
 
     User user = UserMapper.toUser(userDTO);
-    user.setRole(Role.ADMIN);
+
+    if (isAdmin) {
+      user.setRole(Role.ADMIN);
+    }
 
     return UserMapper.toUserDTO(userRepository.save(user));
   }
@@ -47,6 +50,30 @@ public class UserServiceImpl implements UserService {
     return UserMapper.toUserDTO(foundUser);
   }
 
+  // TODO: implement update user functionality
+  @Override
+  public UserDTO updateUser(String token, @NotNull UserDTO userDTO) {
+    User foundUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+
+    if (foundUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
+    return UserMapper.toUserDTO(userRepository.save(foundUser));
+  }
+
+  @Override
+  public UserDTO deleteUser(String token) {
+    User deletedUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+
+    if (deletedUser == null) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+    userRepository.deleteById(deletedUser.getId());
+
+    return UserMapper.toUserDTO(deletedUser);
+  }
+
   @Override
   public UserDTO getUserById(Long id) {
     User foundUser = userRepository.findById(id).orElse(null);
@@ -58,10 +85,9 @@ public class UserServiceImpl implements UserService {
     return UserMapper.toUserDTO(foundUser);
   }
 
-  // TODO: implement update user functionality
   @Override
-  public UserDTO updateUser(@NotNull UserDTO userDTO) {
-    User foundUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
+  public UserDTO updateUserById(long id, UserDTO userDTO) {
+    User foundUser = userRepository.findById(id).orElse(null);
 
     if (foundUser == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -71,13 +97,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO deleteUser(Long id) {
+  public UserDTO deleteUserById(long id) {
     User deletedUser = userRepository.findById(id).orElse(null);
 
     if (deletedUser == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
-    userRepository.deleteById(id);
+    userRepository.deleteById(deletedUser.getId());
 
     return UserMapper.toUserDTO(deletedUser);
   }

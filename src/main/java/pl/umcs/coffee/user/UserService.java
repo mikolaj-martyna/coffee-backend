@@ -7,7 +7,11 @@ public interface UserService {
 
   UserDTO getUserById(Long id);
 
-  UserDTO updateUser(UserDTO user);
+  UserDTO updateUser(String token, UserDTO user);
 
-  UserDTO deleteUser(Long id);
+  UserDTO deleteUser(String token);
+
+  UserDTO updateUserById(long id, UserDTO userDTO);
+
+  UserDTO deleteUserById(long id);
 }

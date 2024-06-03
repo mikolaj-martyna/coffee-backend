@@ -34,13 +34,14 @@ public class SecurityConfig {
             authorize ->
                 authorize
                     .requestMatchers("auth/**").permitAll()
-                    .requestMatchers("user/create").permitAll()
-                    .requestMatchers("product/get/**").permitAll()
-                    .requestMatchers("user/**").hasAuthority("USER")
                     .requestMatchers("cart/**").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("product/add/**", "/product/delete/**").hasAuthority("ADMIN")
-                    .requestMatchers("order/delete").hasAuthority("ADMIN")
-                    .requestMatchers("order/get/all").hasAuthority("ADMIN")
+                    .requestMatchers("user/create").permitAll()
+                    .requestMatchers("user/get", "user/edit", "user/delete").hasAuthority("USER")
+                    .requestMatchers("user/**").hasAuthority("ADMIN")
+                    .requestMatchers("product/add/**", "product/delete/**").hasAuthority("ADMIN")
+                    .requestMatchers("product/get/**").permitAll()
+                    .requestMatchers("order/create", "order/get/**").hasAuthority("USER")
+                    .requestMatchers("order/get/all", "order/delete").hasAuthority("ADMIN")
                     .anyRequest().authenticated())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
