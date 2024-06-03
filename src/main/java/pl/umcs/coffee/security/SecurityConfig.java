@@ -36,10 +36,11 @@ public class SecurityConfig {
                         .requestMatchers("auth/**").permitAll()
                         .requestMatchers("user/create").permitAll()
                         .requestMatchers("product/get/**").permitAll()
-                        .requestMatchers("cart/**").hasAnyRole("USER", "ADMIN")
-                        .requestMatchers("product/add/**", "/product/delete/**").hasRole("ADMIN")
-                        .requestMatchers("order/delete").hasRole("ADMIN")
-                        .requestMatchers("order/get/all").hasRole("ADMIN")
+                        .requestMatchers("user/**").hasAuthority("USER")
+                        .requestMatchers("cart/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("product/add/**", "/product/delete/**").hasAuthority("ADMIN")
+                        .requestMatchers("order/delete").hasAuthority("ADMIN")
+                        .requestMatchers("order/get/all").hasAuthority("ADMIN")
                         .anyRequest().authenticated())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -59,7 +60,7 @@ public class SecurityConfig {
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
-        source.registerCorsConfiguration("/**",configuration);
+        source.registerCorsConfiguration("/**", configuration);
 
         return source;
     }
