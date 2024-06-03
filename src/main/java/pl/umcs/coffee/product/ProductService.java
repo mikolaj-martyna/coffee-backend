@@ -1,9 +1,7 @@
 package pl.umcs.coffee.product;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Service
 public interface ProductService {

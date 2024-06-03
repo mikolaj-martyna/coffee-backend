@@ -1,12 +1,11 @@
 package pl.umcs.coffee.cart;
 
 import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.*;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.user.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter

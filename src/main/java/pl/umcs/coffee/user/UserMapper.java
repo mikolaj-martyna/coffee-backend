@@ -1,7 +1,6 @@
 package pl.umcs.coffee.user;
 
 import org.jetbrains.annotations.NotNull;
-import pl.umcs.coffee.cart.Cart;
 
 public class UserMapper {
   public static UserDTO toUserDTO(@NotNull User user) {

@@ -8,19 +8,19 @@ import lombok.Setter;
 @Setter
 @Builder
 public class UserDTO {
-    // Personal data
-    private String name;
-    private String surname;
+  // Personal data
+  private String name;
+  private String surname;
 
-    private String email;
+  private String email;
 
-    // Address
-    private String country;
-    private String city;
-    private String street;
+  // Address
+  private String country;
+  private String city;
+  private String street;
 
-    private String zipCode;
+  private String zipCode;
 
-    private int buildingNumber;
-    private int apartmentNumber;
+  private int buildingNumber;
+  private int apartmentNumber;
 }

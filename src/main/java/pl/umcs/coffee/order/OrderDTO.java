@@ -1,10 +1,9 @@
 package pl.umcs.coffee.order;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Builder
 @Getter

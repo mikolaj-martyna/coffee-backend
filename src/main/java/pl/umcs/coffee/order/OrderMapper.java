@@ -1,11 +1,10 @@
 package pl.umcs.coffee.order;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.user.User;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class OrderMapper {
   public static OrderDTO toOrderDTO(@NotNull Order order) {

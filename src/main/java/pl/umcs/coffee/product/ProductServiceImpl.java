@@ -1,13 +1,11 @@
 package pl.umcs.coffee.product;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {

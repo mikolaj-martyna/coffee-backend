@@ -8,13 +8,13 @@ import lombok.Setter;
 @Setter
 @Builder
 public class ProductDTO {
-    private Long id;
+  private Long id;
 
-    private String name;
-    private String category;
-    private String description;
+  private String name;
+  private String category;
+  private String description;
 
-    private long price;
+  private long price;
 
-    private String imagePath;
+  private String imagePath;
 }

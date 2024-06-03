@@ -1,11 +1,10 @@
 package pl.umcs.coffee.order;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.*;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.user.User;
-
-import java.util.List;
 
 @Builder
 @Getter

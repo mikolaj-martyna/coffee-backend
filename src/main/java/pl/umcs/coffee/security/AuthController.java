@@ -9,18 +9,18 @@ import pl.umcs.coffee.user.User;
 @RestController
 @RequestMapping("auth")
 public class AuthController {
-    private final JwtService jwtService;
-    private final AuthService authService;
+  private final JwtService jwtService;
+  private final AuthService authService;
 
-    public AuthController(JwtService jwtService, AuthService authService) {
-        this.jwtService = jwtService;
-        this.authService = authService;
-    }
+  public AuthController(JwtService jwtService, AuthService authService) {
+    this.jwtService = jwtService;
+    this.authService = authService;
+  }
 
-    @PostMapping("login")
-    public AuthResponseDto login(@RequestBody AuthRequestDto authRequestDto) {
-        User authenticatedUser = authService.login(authRequestDto);
+  @PostMapping("login")
+  public AuthResponseDto login(@RequestBody AuthRequestDto authRequestDto) {
+    User authenticatedUser = authService.login(authRequestDto);
 
-        return new AuthResponseDto(jwtService.generateToken(authenticatedUser));
-    }
+    return new AuthResponseDto(jwtService.generateToken(authenticatedUser));
+  }
 }

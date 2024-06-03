@@ -13,54 +13,55 @@ import pl.umcs.coffee.user.UserRepository;
 
 @Service
 public class CartServiceImpl implements CartService {
-    private final CartRepository cartRepository;
-    private final UserRepository userRepository;
-    private final JwtService jwtService;
+  private final CartRepository cartRepository;
+  private final UserRepository userRepository;
+  private final JwtService jwtService;
 
-    public CartServiceImpl(CartRepository cartRepository, UserRepository userRepository, JwtService jwtService) {
-        this.cartRepository = cartRepository;
-        this.userRepository = userRepository;
-        this.jwtService = jwtService;
+  public CartServiceImpl(
+      CartRepository cartRepository, UserRepository userRepository, JwtService jwtService) {
+    this.cartRepository = cartRepository;
+    this.userRepository = userRepository;
+    this.jwtService = jwtService;
+  }
+
+  public List<ProductDTO> updateCart(String token, List<ProductDTO> productDTOs, Action action) {
+    // Get user from token
+    Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
+
+    if (user.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    public List<ProductDTO> updateCart(String token, List<ProductDTO> productDTOs, Action action) {
-        // Get user from token
-        Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
+    // Get products from DTOs
+    // and add them to user's cart
+    Cart cart = user.get().getCart();
 
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        // Get products from DTOs
-        // and add them to user's cart
-        Cart cart = user.get().getCart();
-
-        switch (action) {
-            case ADD -> {
-                for (ProductDTO productDTO : productDTOs)
-                    cart.addProduct(ProductMapper.toProduct(productDTO));
-            }
-            case REMOVE -> {
-                for (ProductDTO productDTO : productDTOs)
-                    cart.removeProduct(ProductMapper.toProduct(productDTO));
-            }
-            case CLEAR -> cart.getProducts().clear();
-        }
-
-        // Save changes
-        cartRepository.save(cart);
-
-        // Return current cart
-        return ProductMapper.toProductDTOs(cart.getProducts());
+    switch (action) {
+      case ADD -> {
+        for (ProductDTO productDTO : productDTOs)
+          cart.addProduct(ProductMapper.toProduct(productDTO));
+      }
+      case REMOVE -> {
+        for (ProductDTO productDTO : productDTOs)
+          cart.removeProduct(ProductMapper.toProduct(productDTO));
+      }
+      case CLEAR -> cart.getProducts().clear();
     }
 
-    public List<ProductDTO> getCart(String token) {
-        Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
+    // Save changes
+    cartRepository.save(cart);
 
-        if (user.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    // Return current cart
+    return ProductMapper.toProductDTOs(cart.getProducts());
+  }
 
-        return ProductMapper.toProductDTOs(user.get().getCart().getProducts());
+  public List<ProductDTO> getCart(String token) {
+    Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
+
+    if (user.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
+    return ProductMapper.toProductDTOs(user.get().getCart().getProducts());
+  }
 }

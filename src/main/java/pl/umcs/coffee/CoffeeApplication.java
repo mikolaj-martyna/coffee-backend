@@ -7,8 +7,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class CoffeeApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CoffeeApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(CoffeeApplication.class, args);
+  }
 }
