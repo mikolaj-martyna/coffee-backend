@@ -40,7 +40,8 @@ public class User implements UserDetails {
   private Role role = Role.USER;
 
   // Cart
-  @OneToOne private Cart cart;
+  @OneToOne
+  private Cart cart;
 
   // Order
   @OneToMany

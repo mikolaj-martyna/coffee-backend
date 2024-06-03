@@ -3,11 +3,13 @@ package pl.umcs.coffee.order;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.Product;
+import pl.umcs.coffee.product.ProductRepository;
 import pl.umcs.coffee.security.JwtService;
 import pl.umcs.coffee.user.User;
 import pl.umcs.coffee.user.UserRepository;
@@ -16,15 +18,18 @@ import pl.umcs.coffee.user.UserRepository;
 public class OrderServiceImpl implements OrderService {
   private final OrderRepository orderRepository;
   private final UserRepository userRepository;
-    private final JwtService jwtService;
+  private final JwtService jwtService;
+  private final ProductRepository productRepository;
 
   OrderServiceImpl(
       final OrderRepository orderRepository,
       UserRepository userRepository,
-      JwtService jwtService) {
+      JwtService jwtService,
+      ProductRepository productRepository) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
-      this.jwtService = jwtService;
+    this.jwtService = jwtService;
+    this.productRepository = productRepository;
   }
 
   @Override
@@ -35,11 +40,14 @@ public class OrderServiceImpl implements OrderService {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
-    List<Product> products = user.get().getCart().getProducts();
-    Order createdOrder =
-        orderRepository.save(new Order(0, Status.AWAITING_PAYMENT, user.get(), products));
+    List<Product> products =
+        productRepository.findAllById(
+            user.get().getCart().getProducts().stream()
+                .map(Product::getId)
+                .collect(Collectors.toList()));
+    Order createdOrder = new Order(0, Status.AWAITING_PAYMENT, user.get(), products);
 
-    return OrderMapper.toOrderDTO(createdOrder);
+    return OrderMapper.toOrderDTO(orderRepository.save(createdOrder));
   }
 
   @Override

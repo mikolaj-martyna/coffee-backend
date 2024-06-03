@@ -19,7 +19,9 @@ public class Order {
     private long id;
     private Status status;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
