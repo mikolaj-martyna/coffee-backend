@@ -1,5 +1,6 @@
 package pl.umcs.coffee.order;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
             user.get().getCart().getProducts().stream()
                 .map(Product::getId)
                 .collect(Collectors.toList()));
-    Order createdOrder = new Order(0, Status.AWAITING_PAYMENT, user.get(), products);
+    Order createdOrder = new Order(0L, Status.AWAITING_PAYMENT, LocalDateTime.now(), user.get(), products);
 
     return OrderMapper.toOrderDTO(orderRepository.save(createdOrder));
   }

@@ -1,5 +1,6 @@
 package pl.umcs.coffee.order;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,4 +15,6 @@ public class OrderDTO {
 
     private Long userId;
     private List<Long> productIds;
+
+    private LocalDateTime date;
 }

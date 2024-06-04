@@ -14,6 +14,7 @@ public class OrderMapper {
     return OrderDTO.builder()
         .id(order.getId())
         .status(order.getStatus())
+        .date(order.getDate())
         .userId(order.getUser().getId())
         .productIds(productIds)
         .build();
@@ -23,6 +24,7 @@ public class OrderMapper {
     return Order.builder()
         .id(orderDTO.getId())
         .status(orderDTO.getStatus())
+        .date(orderDTO.getDate())
         .user(user)
         .products(products)
         .build();
