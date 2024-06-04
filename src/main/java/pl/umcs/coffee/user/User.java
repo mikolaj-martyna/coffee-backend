@@ -17,7 +17,9 @@ import pl.umcs.coffee.order.Order;
 @RequiredArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
-  @Id @GeneratedValue private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
   // Personal data
   private String name;
@@ -40,12 +42,10 @@ public class User implements UserDetails {
   private Role role = Role.USER;
 
   // Cart
-  @OneToOne
-  private Cart cart;
+  @OneToOne private Cart cart;
 
   // Order
-  @OneToMany
-  private List<Order> orders = new ArrayList<>();
+  @OneToMany private List<Order> orders = new ArrayList<>();
 
   // UserDetails implementation
   @Override

@@ -15,7 +15,7 @@ import pl.umcs.coffee.user.User;
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Status status;
 
