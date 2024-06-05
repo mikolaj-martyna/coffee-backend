@@ -19,14 +19,14 @@ public class CartController {
         return cartService.getCart(token.split(" ")[1]);
     }
 
-    @PutMapping("add")
-    public List<ProductDTO> addToCart(@RequestHeader(name="Authorization") String token, @RequestBody List<ProductDTO> productDTOs) {
-        return cartService.updateCart(token.split(" ")[1], productDTOs, Action.ADD);
+    @PostMapping("add")
+    public List<ProductDTO> addToCart(@RequestHeader(name="Authorization") String token, @RequestBody List<Long> productIDs) {
+        return cartService.updateCart(token.split(" ")[1], productIDs, Action.ADD);
     }
 
     @PutMapping("remove")
-    public List<ProductDTO> removeFromCart(@RequestHeader(name="Authorization") String token, @RequestBody List<ProductDTO> productDTOs) {
-        return cartService.updateCart(token.split(" ")[1], productDTOs, Action.REMOVE);
+    public List<ProductDTO> removeFromCart(@RequestHeader(name="Authorization") String token, @RequestBody List<Long> productIDs) {
+        return cartService.updateCart(token.split(" ")[1], productIDs, Action.REMOVE);
     }
 
     @DeleteMapping("clear")

@@ -45,6 +45,14 @@ public class Cart {
             .orElse(null));
   }
 
+  public void removeProductById(Long id) {
+    this.products.remove(
+            products.stream()
+                    .filter(p -> Objects.equals(p.getId(), id))
+                    .findFirst()
+                    .orElse(null));
+  }
+
   public void clear() {
     this.products.clear();
   }

@@ -3,7 +3,6 @@ package pl.umcs.coffee.cart;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.product.ProductDTO;
@@ -28,7 +27,7 @@ public class CartServiceImpl implements CartService {
     this.productRepository = productRepository;
   }
 
-  public List<ProductDTO> updateCart(String token, List<ProductDTO> productDTOs, Action action) {
+  public List<ProductDTO> updateCart(String token, List<Long> productIDs, Action action) {
     // Get user from token
     Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
 
@@ -43,12 +42,12 @@ public class CartServiceImpl implements CartService {
 
     switch (action) {
       case ADD -> {
-        for (ProductDTO productDTO : productDTOs)
-          cart.addProduct(productRepository.findByName(productDTO.getName()).orElseThrow());
+        for (Long productID : productIDs)
+          cart.addProduct(productRepository.findById(productID).orElseThrow());
       }
       case REMOVE -> {
-        for (ProductDTO productDTO : productDTOs)
-          cart.removeProduct(ProductMapper.toProduct(productDTO));
+        for (Long productID : productIDs)
+          cart.removeProductById(productID);
       }
       case CLEAR -> cart.clear();
     }
