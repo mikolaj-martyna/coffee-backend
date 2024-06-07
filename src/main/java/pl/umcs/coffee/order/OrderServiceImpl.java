@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import pl.umcs.coffee.cart.Action;
+import pl.umcs.coffee.cart.CartServiceImpl;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.product.ProductRepository;
 import pl.umcs.coffee.security.JwtService;
@@ -21,16 +23,18 @@ public class OrderServiceImpl implements OrderService {
   private final UserRepository userRepository;
   private final JwtService jwtService;
   private final ProductRepository productRepository;
+  private final CartServiceImpl cartServiceImpl;
 
   OrderServiceImpl(
-      final OrderRepository orderRepository,
-      UserRepository userRepository,
-      JwtService jwtService,
-      ProductRepository productRepository) {
+          final OrderRepository orderRepository,
+          UserRepository userRepository,
+          JwtService jwtService,
+          ProductRepository productRepository, CartServiceImpl cartServiceImpl) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
     this.jwtService = jwtService;
     this.productRepository = productRepository;
+    this.cartServiceImpl = cartServiceImpl;
   }
 
   @Override
@@ -46,7 +50,13 @@ public class OrderServiceImpl implements OrderService {
             user.get().getCart().getProducts().stream()
                 .map(Product::getId)
                 .collect(Collectors.toList()));
+
+    if (products.isEmpty()) {
+      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "No products in cart");
+    }
+
     Order createdOrder = new Order(0L, Status.AWAITING_PAYMENT, LocalDateTime.now(), user.get(), products);
+    cartServiceImpl.updateCart(token, new ArrayList<>(), Action.CLEAR);
 
     return OrderMapper.toOrderDTO(orderRepository.save(createdOrder));
   }
