@@ -25,7 +25,7 @@ public class UserController {
 
   @PutMapping("edit")
   public UserDTO updateUser(@RequestHeader(name = "Authorization") String token, @RequestBody UserDTO userDTO) {
-    return userService.updateUser(token, userDTO);
+    return userService.updateUser(token.split(" ")[1], userDTO);
   }
 
   @DeleteMapping("delete")

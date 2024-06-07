@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
     return UserMapper.toUserDTO(foundUser);
   }
 
-  // TODO: implement update user functionality
   @Override
   public UserDTO updateUser(String token, @NotNull UserDTO userDTO) {
     User foundUser = userRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
@@ -65,6 +64,34 @@ public class UserServiceImpl implements UserService {
     if (foundUser == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
+    // TODO: how to do this better xd
+    if (!userDTO.getName().isEmpty())
+      foundUser.setName(userDTO.getName());
+
+    if (!userDTO.getSurname().isEmpty())
+      foundUser.setSurname(userDTO.getSurname());
+
+    if (!userDTO.getEmail().isEmpty())
+      foundUser.setEmail(userDTO.getEmail());
+
+    if (!userDTO.getCountry().isEmpty())
+      foundUser.setCountry(userDTO.getCountry());
+
+    if (!userDTO.getCity().isEmpty())
+      foundUser.setCity(userDTO.getCity());
+
+    if (!userDTO.getStreet().isEmpty())
+      foundUser.setStreet(userDTO.getStreet());
+
+    if (!userDTO.getZipCode().isEmpty())
+      foundUser.setZipCode(userDTO.getZipCode());
+
+    if (userDTO.getBuildingNumber() != 0)
+      foundUser.setBuildingNumber(userDTO.getBuildingNumber());
+
+    if (userDTO.getApartmentNumber() != 0)
+      foundUser.setApartmentNumber(userDTO.getApartmentNumber());
 
     return UserMapper.toUserDTO(userRepository.save(foundUser));
   }
