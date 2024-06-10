@@ -21,12 +21,12 @@ public class Cart {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @OneToOne
   @MapsId
   @JoinColumn(name = "user_id")
   private User user;
 
-  @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @ManyToMany
   @JoinTable(
       name = "Products_Carts",
       joinColumns = {@JoinColumn(name = "cart_id")},

@@ -24,11 +24,11 @@ public class Order {
 
     private LocalDateTime date;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(
             name = "Products_Orders",
             joinColumns = {@JoinColumn(name = "order_id")},
