@@ -33,8 +33,8 @@ public class OrderController {
     }
 
     @PutMapping("update")
-    public OrderDTO updateOrder(@RequestBody OrderDTO order) {
-        return orderService.updateOrder(order);
+    public OrderDTO updateOrderStatus(@RequestBody OrderDTO order) {
+        return orderService.updateOrderStatus(order);
     }
 
     @DeleteMapping("delete/{orderId}")

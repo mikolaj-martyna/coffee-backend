@@ -26,10 +26,11 @@ public class OrderServiceImpl implements OrderService {
   private final CartServiceImpl cartServiceImpl;
 
   OrderServiceImpl(
-          final OrderRepository orderRepository,
-          UserRepository userRepository,
-          JwtService jwtService,
-          ProductRepository productRepository, CartServiceImpl cartServiceImpl) {
+      final OrderRepository orderRepository,
+      UserRepository userRepository,
+      JwtService jwtService,
+      ProductRepository productRepository,
+      CartServiceImpl cartServiceImpl) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
     this.jwtService = jwtService;
@@ -55,7 +56,8 @@ public class OrderServiceImpl implements OrderService {
       throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY, "No products in cart");
     }
 
-    Order createdOrder = new Order(0L, Status.AWAITING_PAYMENT, LocalDateTime.now(), user.get(), products);
+    Order createdOrder =
+        new Order(0L, Status.AWAITING_PAYMENT, LocalDateTime.now(), user.get(), products);
     cartServiceImpl.updateCart(token, new ArrayList<>(), Action.CLEAR);
 
     return OrderMapper.toOrderDTO(orderRepository.save(createdOrder));
@@ -97,12 +99,13 @@ public class OrderServiceImpl implements OrderService {
   }
 
   @Override
-  public OrderDTO updateOrder(@NotNull OrderDTO orderDTO) {
+  public OrderDTO updateOrderStatus(@NotNull OrderDTO orderDTO) {
     Order foundOrder = orderRepository.findById(orderDTO.getId()).orElse(null);
 
     if (foundOrder == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
+
     foundOrder.setStatus(orderDTO.getStatus());
 
     return OrderMapper.toOrderDTO(orderRepository.save(foundOrder));

@@ -11,7 +11,7 @@ public interface OrderService {
 
   List<OrderDTO> getAllOrders();
 
-  OrderDTO updateOrder(OrderDTO order);
+  OrderDTO updateOrderStatus(OrderDTO order);
 
   OrderDTO deleteOrder(Long orderId);
 }

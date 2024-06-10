@@ -41,7 +41,7 @@ public class SecurityConfig {
                     .requestMatchers("product/add/**", "product/delete/**").hasAuthority("ADMIN")
                     .requestMatchers("product/get/**").permitAll()
                     .requestMatchers("order/create", "order/get/**").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("order/get/all", "order/delete").hasAuthority("ADMIN")
+                    .requestMatchers("order/get/all", "order/update", "order/update/**", "order/delete").hasAuthority("ADMIN")
                     .anyRequest().authenticated())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
