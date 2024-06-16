@@ -122,4 +122,14 @@ public class OrderServiceImpl implements OrderService {
 
     return OrderMapper.toOrderDTO(foundOrder);
   }
+
+  public static long getTotal(Order order) {
+    long sum = 0;
+
+    for (Product product : order.getProducts()) {
+      sum += product.getPrice();
+    }
+
+    return sum;
+  }
 }

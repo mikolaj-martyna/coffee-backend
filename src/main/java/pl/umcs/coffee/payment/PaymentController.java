@@ -1,20 +1,19 @@
 package pl.umcs.coffee.payment;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 @RestController
 @RequestMapping("payment")
 public class PaymentController {
-    private final PaymentService paymentService;
+    private final PaymentService paymentServiceImpl;
 
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public PaymentController(PaymentServiceImpl paymentServiceImpl) {
+        this.paymentServiceImpl = paymentServiceImpl;
     }
 
-    @PostMapping("authorize")
-    public void authorize() {
-        paymentService.authorize();
+    @PostMapping
+    public RedirectView payment(@RequestHeader(name = "Authorization") String token) {
+        return paymentServiceImpl.handlePayment(token.split(" ")[1]);
     }
 }

@@ -1,8 +1,10 @@
 package pl.umcs.coffee.order;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.user.User;
 
@@ -28,5 +30,19 @@ public class OrderMapper {
         .user(user)
         .products(products)
         .build();
+  }
+
+  public static JSONArray toPayu(@NotNull Order order) {
+    JSONArray productsArray = new JSONArray();
+
+    for (Product p : order.getProducts()) {
+      JSONObject productObject = new JSONObject();
+      productObject.put("name", p.getName());
+      productObject.put("unitPrice", p.getPrice());
+      productObject.put("quantity", 1);
+      productsArray.put(productObject);
+    }
+
+    return productsArray;
   }
 }
