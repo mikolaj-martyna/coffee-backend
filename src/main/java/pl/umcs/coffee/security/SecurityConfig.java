@@ -33,16 +33,27 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             authorize ->
                 authorize
-                    .requestMatchers("auth/**").permitAll()
-                    .requestMatchers("cart/**").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("user/create").permitAll()
-                    .requestMatchers("user/get", "user/edit", "user/delete").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("user/**").hasAuthority("ADMIN")
-                    .requestMatchers("product/add/**", "product/delete/**").hasAuthority("ADMIN")
-                    .requestMatchers("product/get/**").permitAll()
-                    .requestMatchers("order/create", "order/get/**").hasAnyAuthority("USER", "ADMIN")
-                    .requestMatchers("order/get/all", "order/update", "order/update/**", "order/delete").hasAuthority("ADMIN")
-                    .anyRequest().authenticated())
+                    .requestMatchers("auth/**")
+                    .permitAll()
+                    .requestMatchers("cart/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers("user/create")
+                    .permitAll()
+                    .requestMatchers("user/get", "user/edit", "user/delete")
+                    .hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers("user/**")
+                    .hasAuthority("ADMIN")
+                    .requestMatchers("product/add/**", "product/delete/**")
+                    .hasAuthority("ADMIN")
+                    .requestMatchers("product/get/**")
+                    .permitAll()
+                    .requestMatchers("order/create", "order/get/**")
+                    .hasAnyAuthority("USER", "ADMIN")
+                    .requestMatchers(
+                        "order/get/all", "order/update", "order/update/**", "order/delete")
+                    .hasAuthority("ADMIN")
+                    .anyRequest()
+                    .authenticated())
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -56,7 +67,9 @@ public class SecurityConfig {
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+    configuration.setAllowedOrigins(
+        List.of(
+            "http://localhost:3000", "http://spring.skni.umcs.pl", "https://spring.skni.umcs.pl"));
     configuration.setAllowedMethods(List.of("*"));
     configuration.setAllowedHeaders(List.of("*"));
 
