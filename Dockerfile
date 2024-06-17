@@ -10,7 +10,7 @@ COPY src ./src
 
 RUN ./mvnw package -DskipTests
 
-FROM amazoncorretto:20 as prod
+FROM amazoncorretto:21 as prod
 
 WORKDIR /app
 
