@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
     headers.setBearerAuth(getAuthorizationToken());
 
     JSONObject body = new JSONObject();
-    body.put("continueUrl", "http://localhost:3000");
+    body.put("continueUrl", "http://localhost:3000"); // TODO: change once prod is up
     body.put("customerIp", "1.12.123.255");
     body.put("merchantPosId", String.valueOf(posId));
     body.put("description", "Order for account " + order.getUser().getUsername());
