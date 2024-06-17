@@ -1,4 +1,4 @@
-FROM amazoncorretto:20 as builder
+FROM amazoncorretto:21 as builder
 WORKDIR /app
 
 COPY .mvn/ .mvn
