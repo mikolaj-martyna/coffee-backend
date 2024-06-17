@@ -1,19 +1,22 @@
 package pl.umcs.coffee.payment;
 
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("payment")
 public class PaymentController {
-    private final PaymentService paymentServiceImpl;
+  private final PaymentService paymentServiceImpl;
 
-    public PaymentController(PaymentServiceImpl paymentServiceImpl) {
-        this.paymentServiceImpl = paymentServiceImpl;
-    }
+  public PaymentController(PaymentServiceImpl paymentServiceImpl) {
+    this.paymentServiceImpl = paymentServiceImpl;
+  }
 
-    @PostMapping
-    public RedirectView payment(@RequestHeader(name = "Authorization") String token) {
-        return paymentServiceImpl.handlePayment(token.split(" ")[1]);
-    }
+  @PostMapping
+  public Map<String, String> payment(@RequestHeader(name = "Authorization") String token) {
+    return Collections.singletonMap("url", paymentServiceImpl.handlePayment(token.split(" ")[1]));
+  }
 }

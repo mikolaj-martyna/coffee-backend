@@ -6,7 +6,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.view.RedirectView;
 import pl.umcs.coffee.order.*;
 import pl.umcs.coffee.security.JwtService;
 import pl.umcs.coffee.user.UserRepository;
@@ -58,6 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
     headers.setBearerAuth(getAuthorizationToken());
 
     JSONObject body = new JSONObject();
+    body.put("continueUrl", "http://localhost:3000");
     body.put("customerIp", "1.12.123.255");
     body.put("merchantPosId", String.valueOf(posId));
     body.put("description", "Order for account " + order.getUser().getUsername());
@@ -73,16 +73,14 @@ public class PaymentServiceImpl implements PaymentService {
     return new JSONObject(jsonResponse.getBody()).getString("redirectUri");
   }
 
-  public RedirectView handlePayment(String token) {
+  public String handlePayment(String token) {
     Order userOrder = orderRepository.findTopOneByUserEmail(jwtService.extractUsername(token));
 
     if (userOrder == null) {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found");
     }
 
-    String redirectUri = createOrder(userOrder);
-
-    return new RedirectView(redirectUri);
+    return createOrder(userOrder);
   }
 
   private String getAuthorizationToken() {
