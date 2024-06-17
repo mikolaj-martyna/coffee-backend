@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import pl.umcs.coffee.cart.Action;
 import pl.umcs.coffee.cart.CartServiceImpl;
+import pl.umcs.coffee.payment.PaymentService;
 import pl.umcs.coffee.product.Product;
 import pl.umcs.coffee.product.ProductRepository;
 import pl.umcs.coffee.security.JwtService;
@@ -24,22 +25,31 @@ public class OrderServiceImpl implements OrderService {
   private final JwtService jwtService;
   private final ProductRepository productRepository;
   private final CartServiceImpl cartServiceImpl;
+  private final PaymentService paymentServiceImpl;
 
   OrderServiceImpl(
       final OrderRepository orderRepository,
       UserRepository userRepository,
       JwtService jwtService,
       ProductRepository productRepository,
-      CartServiceImpl cartServiceImpl) {
+      CartServiceImpl cartServiceImpl,
+      PaymentService paymentServiceImpl) {
     this.orderRepository = orderRepository;
     this.userRepository = userRepository;
     this.jwtService = jwtService;
     this.productRepository = productRepository;
     this.cartServiceImpl = cartServiceImpl;
+    this.paymentServiceImpl = paymentServiceImpl;
+  }
+
+  public String redirectCreateOrder(String token) {
+    Order createdOrder = createOrder(token);
+
+    return paymentServiceImpl.createOrder(createdOrder);
   }
 
   @Override
-  public OrderDTO createOrder(String token) {
+  public Order createOrder(String token) {
     Optional<User> user = userRepository.findByEmail(jwtService.extractUsername(token));
 
     if (user.isEmpty()) {
@@ -60,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
         new Order(0L, Status.AWAITING_PAYMENT, LocalDateTime.now(), user.get(), products);
     cartServiceImpl.updateCart(token, new ArrayList<>(), Action.CLEAR);
 
-    return OrderMapper.toOrderDTO(orderRepository.save(createdOrder));
+    return orderRepository.save(createdOrder);
   }
 
   @Override

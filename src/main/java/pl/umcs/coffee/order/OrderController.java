@@ -1,6 +1,9 @@
 package pl.umcs.coffee.order;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,8 +16,8 @@ public class OrderController {
     }
 
     @PostMapping("create")
-    public OrderDTO createOrder(@RequestHeader(name = "Authorization") String token) {
-        return orderService.createOrder(token.split(" ")[1]);
+    public Map<String, String> createOrder(@RequestHeader(name = "Authorization") String token) {
+        return Collections.singletonMap("url", orderService.redirectCreateOrder(token.split(" ")[1]));
     }
 
     @GetMapping("get/{id}")

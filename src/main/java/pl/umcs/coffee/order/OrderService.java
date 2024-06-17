@@ -3,7 +3,7 @@ package pl.umcs.coffee.order;
 import java.util.List;
 
 public interface OrderService {
-  OrderDTO createOrder(String token);
+  Order createOrder(String token);
 
   OrderDTO getOrder(Long orderId);
 

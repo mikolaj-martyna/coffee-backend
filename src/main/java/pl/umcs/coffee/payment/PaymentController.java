@@ -14,9 +14,4 @@ public class PaymentController {
   public PaymentController(PaymentServiceImpl paymentServiceImpl) {
     this.paymentServiceImpl = paymentServiceImpl;
   }
-
-  @PostMapping
-  public Map<String, String> payment(@RequestHeader(name = "Authorization") String token) {
-    return Collections.singletonMap("url", paymentServiceImpl.handlePayment(token.split(" ")[1]));
-  }
 }
