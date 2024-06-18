@@ -13,8 +13,8 @@ public class UserController {
 
   // All
   @PostMapping("create")
-  public UserDTO createUser(@RequestBody UserCreationDTO userDTO, @RequestParam(required = false, name = "admin", defaultValue = "false") boolean isAdmin) {
-    return userService.createUser(userDTO, isAdmin);
+  public UserDTO createUser(@RequestBody UserCreationDTO userDTO) {
+    return userService.createUser(userDTO);
   }
 
   // User

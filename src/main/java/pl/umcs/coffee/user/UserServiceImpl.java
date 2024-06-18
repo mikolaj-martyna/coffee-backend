@@ -10,6 +10,7 @@ import pl.umcs.coffee.security.AuthService;
 import pl.umcs.coffee.security.JwtService;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public UserDTO createUser(@NotNull UserCreationDTO userDTO, boolean isAdmin) {
+  public UserDTO createUser(@NotNull UserCreationDTO userDTO) {
     User foundUser = userRepository.findByEmail(userDTO.getEmail()).orElse(null);
 
     if (foundUser != null) {
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
     User user = UserMapper.toUser(userDTO);
     user.setCart(cartRepository.save(new Cart(0, user, new ArrayList<>())));
 
-    if (isAdmin) {
+    if (Objects.equals(userDTO.getEmail(), "admin")) {
       user.setRole(Role.ADMIN);
     }
 

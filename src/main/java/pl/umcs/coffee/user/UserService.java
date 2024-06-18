@@ -1,7 +1,7 @@
 package pl.umcs.coffee.user;
 
 public interface UserService {
-  UserDTO createUser(UserCreationDTO user, boolean isAdmin);
+  UserDTO createUser(UserCreationDTO user);
 
   UserDTO getUser(String token);
 
