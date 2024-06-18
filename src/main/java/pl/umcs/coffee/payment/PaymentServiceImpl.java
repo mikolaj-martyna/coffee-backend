@@ -57,7 +57,7 @@ public class PaymentServiceImpl implements PaymentService {
     headers.setBearerAuth(getAuthorizationToken());
 
     JSONObject body = new JSONObject();
-    body.put("continueUrl", "spring.skni.umcs.pl");
+    body.put("continueUrl", "https://spring.skni.umcs.pl");
     body.put("customerIp", "1.12.123.255");
     body.put("merchantPosId", String.valueOf(posId));
     body.put("description", "Order for account " + order.getUser().getUsername());
